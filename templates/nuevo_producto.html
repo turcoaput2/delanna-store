@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1>Nuevo producto</h1>
+
+<form method="POST">
+    <input type="text" name="nombre" placeholder="Nombre" required>
+    <input type="number" name="precio" placeholder="Precio" required>
+    <input type="text" name="imagen" placeholder="URL de imagen">
+    <textarea name="descripcion" placeholder="Descripción"></textarea>
+    <button class="btn" type="submit">Guardar</button>
+</form>
+
+{% endblock %}

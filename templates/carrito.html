@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h3>🛒 Tu carrito</h3>
+
+{% if productos %}
+  <ul class="list-group mb-3">
+  {% for p in productos %}
+    <li class="list-group-item d-flex justify-content-between">
+      {{ p.nombre }} x{{ p.cantidad }}
+      <strong>${{ p.subtotal }}</strong>
+    </li>
+  {% endfor %}
+  </ul>
+
+  <h4>Total: ${{ total }}</h4>
+
+  <a class="btn btn-success btn-lg mt-3"
+     href="https://wa.me/+5493518158539?text=Hola%20quiero%20comprar%20estos%20productos%20por%20Delanna">
+     Comprar por WhatsApp
+  </a>
+{% else %}
+  <p>El carrito está vacío</p>
+{% endif %}
+
+{% endblock %}
+

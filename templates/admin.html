@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Admin Delanna</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+body {
+    font-family: Poppins, sans-serif;
+    background: #f4f4f4;
+}
+.container {
+    max-width: 900px;
+    margin: auto;
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+}
+h1 {
+    text-align: center;
+}
+form {
+    display: grid;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+input, button {
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+}
+button {
+    background: #111;
+    color: white;
+    font-weight: bold;
+}
+table {
+    width: 100%;
+}
+th, td {
+    padding: 10px;
+    text-align: center;
+}
+img {
+    width: 70px;
+    border-radius: 10px;
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+<h1>Panel de Administracion</h1>
+
+<form method="POST" enctype="multipart/form-data">
+    <input type="text" name="nombre" placeholder="Nombre del producto" required>
+    <input type="number" name="precio" placeholder="Precio" required>
+    <input type="file" name="imagen" required>
+    <button>Agregar producto</button>
+</form>
+
+<table>
+<tr>
+    <th>Imagen</th>
+    <th>Nombre</th>
+    <th>Precio</th>
+</tr>
+{% for p in productos %}
+<tr>
+    <td><img src="{{ url_for('static', filename='img/' + p.imagen) }}"></td>
+    <td>{{ p.nombre }}</td>
+    <td>$ {{ p.precio }}</td>
+</tr>
+{% endfor %}
+</table>
+</div>
+</body>
+</html>
