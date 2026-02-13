@@ -1,44 +1,13 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Acceso Admin | Delanna</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #111;
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-        form {
-            background: #1e1e1e;
-            padding: 30px;
-            border-radius: 10px;
-            width: 300px;
-        }
-        input, button {
-            width: 100%;
-            margin-top: 10px;
-            padding: 10px;
-            border-radius: 5px;
-            border: none;
-        }
-        button {
-            background: #e91e63;
-            color: white;
-            cursor: pointer;
-        }
-    </style>
-</head>
-<body>
-    <form method="post">
-        <h2>Panel Admin</h2>
-        <input type="text" name="user" placeholder="Usuario" required>
-        <input type="password" name="password" placeholder="Contraseña" required>
-        <button type="submit">Ingresar</button>
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-12 col-md-6 col-lg-4">
+    <form method="post" class="card shadow-sm p-4">
+      <h2 class="mb-3">Panel Admin</h2>
+      <input class="form-control mb-2" type="text" name="user" placeholder="Usuario" required>
+      <input class="form-control mb-3" type="password" name="password" placeholder="Contraseña" required>
+      <button class="btn btn-dark" type="submit">Ingresar</button>
     </form>
-</body>
-</html>
+  </div>
+</div>
+{% endblock %}

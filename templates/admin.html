@@ -1,79 +1,48 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<title>Admin Delanna</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+{% extends "base.html" %}
+{% block content %}
+<div class="container py-2">
+  <h1 class="mb-4">Panel de Administración</h1>
 
-<style>
-body {
-    font-family: Poppins, sans-serif;
-    background: #f4f4f4;
-}
-.container {
-    max-width: 900px;
-    margin: auto;
-    background: white;
-    padding: 30px;
-    border-radius: 15px;
-}
-h1 {
-    text-align: center;
-}
-form {
-    display: grid;
-    gap: 15px;
-    margin-bottom: 30px;
-}
-input, button {
-    padding: 12px;
-    border-radius: 10px;
-    border: 1px solid #ccc;
-}
-button {
-    background: #111;
-    color: white;
-    font-weight: bold;
-}
-table {
-    width: 100%;
-}
-th, td {
-    padding: 10px;
-    text-align: center;
-}
-img {
-    width: 70px;
-    border-radius: 10px;
-}
-</style>
-</head>
+  <form method="POST" enctype="multipart/form-data" class="card p-3 mb-4">
+      <div class="row g-3">
+        <div class="col-md-5">
+          <input class="form-control" type="text" name="nombre" placeholder="Nombre del producto" required>
+        </div>
+        <div class="col-md-3">
+          <input class="form-control" type="number" step="0.01" name="precio" placeholder="Precio" required>
+        </div>
+        <div class="col-md-4">
+          <input class="form-control" type="file" name="imagen" accept="image/*" required>
+        </div>
+      </div>
+      <button class="btn btn-dark mt-3">Agregar producto</button>
+  </form>
 
-<body>
-<div class="container">
-<h1>Panel de Administracion</h1>
-
-<form method="POST" enctype="multipart/form-data">
-    <input type="text" name="nombre" placeholder="Nombre del producto" required>
-    <input type="number" name="precio" placeholder="Precio" required>
-    <input type="file" name="imagen" required>
-    <button>Agregar producto</button>
-</form>
-
-<table>
-<tr>
-    <th>Imagen</th>
-    <th>Nombre</th>
-    <th>Precio</th>
-</tr>
-{% for p in productos %}
-<tr>
-    <td><img src="{{ url_for('static', filename='img/' + p.imagen) }}"></td>
-    <td>{{ p.nombre }}</td>
-    <td>$ {{ p.precio }}</td>
-</tr>
-{% endfor %}
-</table>
+  <div class="table-responsive">
+    <table class="table table-striped align-middle">
+      <thead>
+      <tr>
+          <th>Imagen</th>
+          <th>Nombre</th>
+          <th>Precio</th>
+          <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for p in productos %}
+      <tr>
+          <td><img src="{{ url_for('static', filename='img/' + p.imagen) }}" alt="{{ p.nombre }}" style="width:70px;border-radius:10px;"></td>
+          <td>{{ p.nombre }}</td>
+          <td>$ {{ '%.2f'|format(p.precio) }}</td>
+          <td>
+            <a class="btn btn-sm btn-outline-danger" href="/eliminar/{{ p.id }}" onclick="return confirm('¿Eliminar este producto?');">Eliminar</a>
+          </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="4">No hay productos cargados.</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
 </div>
-</body>
-</html>
+{% endblock %}
