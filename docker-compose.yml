@@ -5,3 +5,7 @@ services:
       - "5000:5000"
     volumes:
       - .:/app
+    environment:
+      - SECRET_KEY=super_secret_change_me
+      - ADMIN_EMAIL=admin@delanna.com
+      - ADMIN_PASSWORD=Admin1234

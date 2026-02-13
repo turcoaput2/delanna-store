@@ -1,48 +1,82 @@
 {% extends "base.html" %}
+{% block title %}Panel Admin{% endblock %}
 {% block content %}
-<div class="container py-2">
-  <h1 class="mb-4">Panel de Administración</h1>
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="h3">Panel de administración</h1>
+  <span class="badge bg-dark">Ruta privada: /admin</span>
+</div>
 
-  <form method="POST" enctype="multipart/form-data" class="card p-3 mb-4">
-      <div class="row g-3">
-        <div class="col-md-5">
-          <input class="form-control" type="text" name="nombre" placeholder="Nombre del producto" required>
-        </div>
-        <div class="col-md-3">
-          <input class="form-control" type="number" step="0.01" name="precio" placeholder="Precio" required>
-        </div>
-        <div class="col-md-4">
-          <input class="form-control" type="file" name="imagen" accept="image/*" required>
-        </div>
-      </div>
-      <button class="btn btn-dark mt-3">Agregar producto</button>
+<section class="card border-0 shadow-sm mb-4 p-3 p-md-4">
+  <h2 class="h5 mb-3">Crear producto</h2>
+  <form method="post" action="{{ url_for('admin_create_product') }}" enctype="multipart/form-data">
+    <div class="row g-2">
+      <div class="col-md-4"><input class="form-control" name="nombre" placeholder="Nombre" required></div>
+      <div class="col-md-3"><input class="form-control" type="number" step="0.01" min="0" name="precio" placeholder="Precio" required></div>
+      <div class="col-md-3"><input class="form-control" type="file" name="imagen" accept="image/*" required></div>
+      <div class="col-md-2"><button class="btn btn-primary w-100">Crear</button></div>
+    </div>
   </form>
+</section>
 
+<section class="card border-0 shadow-sm mb-4 p-3 p-md-4">
+  <h2 class="h5 mb-3">Productos</h2>
   <div class="table-responsive">
-    <table class="table table-striped align-middle">
-      <thead>
-      <tr>
-          <th>Imagen</th>
-          <th>Nombre</th>
-          <th>Precio</th>
-          <th></th>
-      </tr>
-      </thead>
+    <table class="table align-middle">
+      <thead><tr><th>Imagen</th><th>Nombre</th><th>Precio</th><th>Acciones</th></tr></thead>
       <tbody>
       {% for p in productos %}
-      <tr>
-          <td><img src="{{ url_for('static', filename='img/' + p.imagen) }}" alt="{{ p.nombre }}" style="width:70px;border-radius:10px;"></td>
-          <td>{{ p.nombre }}</td>
+        <tr>
+          <td><img src="{{ url_for('static', filename='img/' + p.imagen) }}" class="thumb" alt="{{ p.nombre }}"></td>
+          <td>
+            <form class="d-flex gap-2" method="post" action="{{ url_for('admin_update_product', product_id=p.id) }}">
+              <input class="form-control form-control-sm" name="nombre" value="{{ p.nombre }}" required>
+              <input class="form-control form-control-sm" type="number" step="0.01" min="0" name="precio" value="{{ p.precio }}" required>
+              <button class="btn btn-sm btn-outline-primary">Guardar</button>
+            </form>
+          </td>
           <td>$ {{ '%.2f'|format(p.precio) }}</td>
           <td>
-            <a class="btn btn-sm btn-outline-danger" href="/eliminar/{{ p.id }}" onclick="return confirm('¿Eliminar este producto?');">Eliminar</a>
+            <form method="post" action="{{ url_for('admin_delete_product', product_id=p.id) }}" onsubmit="return confirm('¿Eliminar producto?')">
+              <button class="btn btn-sm btn-outline-danger">Eliminar</button>
+            </form>
           </td>
-      </tr>
+        </tr>
       {% else %}
-      <tr><td colspan="4">No hay productos cargados.</td></tr>
+        <tr><td colspan="4">Sin productos.</td></tr>
       {% endfor %}
       </tbody>
     </table>
   </div>
-</div>
+</section>
+
+<section class="card border-0 shadow-sm p-3 p-md-4">
+  <h2 class="h5 mb-3">Pedidos</h2>
+  <div class="table-responsive">
+    <table class="table align-middle">
+      <thead><tr><th>#</th><th>Cliente</th><th>Total</th><th>Fecha</th><th>Estado</th></tr></thead>
+      <tbody>
+      {% for o in orders %}
+        <tr>
+          <td>{{ o.id }}</td>
+          <td>{{ o.email }}</td>
+          <td>$ {{ '%.2f'|format(o.total) }}</td>
+          <td>{{ o.created_at[:19].replace('T', ' ') }}</td>
+          <td>
+            <form method="post" action="{{ url_for('admin_update_order_status', order_id=o.id) }}" class="d-flex gap-2">
+              <select class="form-select form-select-sm" name="status">
+                {% for st in order_status %}
+                  <option value="{{ st }}" {% if st == o.status %}selected{% endif %}>{{ st|capitalize }}</option>
+                {% endfor %}
+              </select>
+              <button class="btn btn-sm btn-outline-dark">Actualizar</button>
+            </form>
+          </td>
+        </tr>
+      {% else %}
+        <tr><td colspan="5">No hay pedidos aún.</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
 {% endblock %}

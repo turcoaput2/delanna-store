@@ -1,16 +1,34 @@
+:root {
+  --brand: #6f42c1;
+}
+
 body {
-    background: #fafafa;
-    color: #111;
-    font-family: "Inter", system-ui, sans-serif;
+  background: #f5f6fb;
+  color: #1a1a1a;
 }
 
-.card img {
-    height: 300px;
-    object-fit: cover;
+.bg-primary {
+  background: linear-gradient(90deg, #6f42c1, #8e44ad) !important;
 }
 
-.precio {
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: #e91e63;
+.hero {
+  background: linear-gradient(135deg, rgba(111, 66, 193, 0.95), rgba(142, 68, 173, 0.85));
+}
+
+.product-card img {
+  height: 320px;
+  object-fit: cover;
+}
+
+.price {
+  color: var(--brand);
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+
+.thumb {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 12px;
 }

@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Mis pedidos{% endblock %}
+{% block content %}
+<h1 class="h3 mb-3">Mis pedidos</h1>
+<div class="card border-0 shadow-sm p-3">
+  <div class="table-responsive">
+    <table class="table mb-0">
+      <thead><tr><th>#</th><th>Total</th><th>Estado</th><th>Fecha</th><th></th></tr></thead>
+      <tbody>
+      {% for o in orders %}
+        <tr>
+          <td>{{ o.id }}</td>
+          <td>$ {{ '%.2f'|format(o.total) }}</td>
+          <td><span class="badge text-bg-secondary">{{ o.status }}</span></td>
+          <td>{{ o.created_at[:19].replace('T', ' ') }}</td>
+          <td><a href="{{ url_for('order_confirmation', order_id=o.id) }}" class="btn btn-sm btn-outline-primary">Ver detalle</a></td>
+        </tr>
+      {% else %}
+        <tr><td colspan="5">Todavía no realizaste pedidos.</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
