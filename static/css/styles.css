@@ -1,16 +1,19 @@
 body {
-    background: #fafafa;
-    color: #111;
-    font-family: "Inter", system-ui, sans-serif;
+  background: #f7f8fc;
+  color: #1f2937;
+  font-family: Inter, system-ui, -apple-system, sans-serif;
 }
 
-.card img {
-    height: 300px;
-    object-fit: cover;
+.hero {
+  background: linear-gradient(120deg, #1f2937, #111827 60%, #7c3aed);
 }
 
-.precio {
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: #e91e63;
+.product-card img {
+  height: 260px;
+  object-fit: cover;
+}
+
+.price {
+  color: #be185d;
+  font-size: 1.15rem;
 }
