@@ -1,0 +1,56 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&display=swap');
+
+body {
+  background: radial-gradient(circle at top, #fff1f7 0%, #fff9fc 42%, #fdf5fa 100%);
+  color: #3f2f3a;
+  font-family: Inter, system-ui, -apple-system, sans-serif;
+  min-height: 100vh;
+}
+
+.nav-soft {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid #f0d9e6;
+}
+
+.brand-script {
+  font-family: 'Playfair Display', serif;
+  letter-spacing: 0.4px;
+  color: #8f2d56 !important;
+}
+
+.hero {
+  background: linear-gradient(120deg, #8f2d56, #c4457d 45%, #ee7aa8);
+}
+
+.product-card {
+  border-radius: 1rem;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 1rem 2rem rgba(143, 45, 86, 0.15) !important;
+}
+
+.product-card img {
+  height: 320px;
+  object-fit: cover;
+}
+
+.price {
+  color: #8f2d56;
+  font-size: 1.2rem;
+}
+
+.btn-dark {
+  background-color: #8f2d56;
+  border-color: #8f2d56;
+}
+
+.btn-dark:hover,
+.btn-dark:focus {
+  background-color: #772347;
+  border-color: #772347;
+}

@@ -14,6 +14,7 @@ def create_app():
     )
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "dev-secret-key-change-in-prod")
+    app.config["ADMIN_URL_PREFIX"] = os.environ.get("ADMIN_URL_PREFIX", "/atelier-privado-delanna")
 
     db.init_app(app)
 
@@ -28,7 +29,7 @@ def create_app():
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(shop_bp)
-    app.register_blueprint(admin_bp)
+    app.register_blueprint(admin_bp, url_prefix=app.config["ADMIN_URL_PREFIX"])
     app.register_blueprint(orders_bp)
 
     @app.errorhandler(403)
@@ -38,6 +39,11 @@ def create_app():
     @app.errorhandler(404)
     def not_found(_):
         return render_template("errors/404.html"), 404
+
+    @app.errorhandler(500)
+    def internal_error(_):
+        db.session.rollback()
+        return render_template("errors/500.html"), 500
 
     with app.app_context():
         db.create_all()

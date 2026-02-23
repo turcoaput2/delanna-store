@@ -1,11 +1,11 @@
-from flask import Blueprint, abort, flash, g, redirect, render_template, request, session, url_for
+from flask import Blueprint, abort, flash, redirect, render_template, request, session, url_for
 from werkzeug.security import check_password_hash
 
 from . import db
 from .extensions import admin_required
 from .models import Order, Product, User
 
-admin_bp = Blueprint("admin", __name__, url_prefix="/admin")
+admin_bp = Blueprint("admin", __name__)
 
 
 @admin_bp.route("/login", methods=["GET", "POST"])
@@ -27,6 +27,11 @@ def admin_login():
 
 
 @admin_bp.get("/")
+def admin_root():
+    return redirect(url_for("admin.dashboard"))
+
+
+@admin_bp.get("/dashboard")
 @admin_required
 def dashboard():
     products = Product.query.order_by(Product.created_at.desc()).all()
