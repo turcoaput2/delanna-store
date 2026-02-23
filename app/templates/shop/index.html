@@ -1,30 +1,153 @@
-{% extends 'base.html' %}
-{% block title %}Delanna Lingerie · Inicio{% endblock %}
+{% extends "base.html" %}
+{% block title %}Delanna Lencería | Inicio{% endblock %}
+
 {% block content %}
-<section class="hero p-4 p-md-5 rounded-4 mb-4 text-white shadow-sm">
-  <span class="badge rounded-pill bg-light text-dark mb-3">Colección femenina 2026</span>
-  <h1 class="display-6 fw-bold mb-3">Lencería femenina elegante, delicada y cómoda</h1>
-  <p class="mb-0 col-lg-8">Descubrí conjuntos, bodys y básicos premium para sentirte segura todos los días. Elegí tus favoritos y confirmá tu pedido en segundos.</p>
+<section class="hero-shell">
+  <div class="container">
+    <article class="hero-card">
+      <span class="hero-badge">Colección femenina 2026</span>
+      <h1>Lencería femenina elegante, delicada y cómoda</h1>
+      <p>
+        Descubrí piezas creadas para acompañarte todos los días con diseño sutil,
+        suavidad premium y calce favorecedor.
+      </p>
+      <div class="hero-actions">
+        <a href="#productos" class="btn btn-primary">Ver productos</a>
+        <a
+          href="https://wa.me/5493518158539?text=Hola%20%F0%9F%91%8B%20Quiero%20consultar%20por%20un%20producto%20de%20Delanna%20Lencer%C3%ADa"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn btn-secondary"
+        >
+          Comprar por WhatsApp
+        </a>
+      </div>
+    </article>
+  </div>
 </section>
 
-<div class="row g-4">
-  {% for product in products %}
-    <div class="col-12 col-md-6 col-xl-4">
-      <article class="card h-100 product-card border-0 shadow-sm">
-        <img class="card-img-top" src="{{ product.image_url or 'https://images.unsplash.com/photo-1613553497126-a44624272024?auto=format&fit=crop&w=900&q=80' }}" alt="{{ product.name }}">
-        <div class="card-body d-flex flex-column p-4">
-          <h5 class="card-title mb-1">{{ product.name }}</h5>
-          <p class="text-muted small mb-2">{{ product.description or 'Diseño exclusivo de Delanna Lingerie.' }}</p>
-          <p class="price fw-bold mb-3">$ {{ '%.2f'|format(product.price) }}</p>
-          <form method="post" action="{{ url_for('shop.add_to_cart', product_id=product.id) }}" class="mt-auto d-flex gap-2">
-            <input type="number" class="form-control rounded-pill" name="quantity" min="1" value="1" style="max-width: 90px;">
-            <button class="btn btn-dark rounded-pill w-100" type="submit">Agregar al carrito</button>
-          </form>
-        </div>
-      </article>
+<section class="section container" id="categorias">
+  <div class="section-head">
+    <h2>Categorías</h2>
+    <p>Explorá la colección y encontrá el estilo ideal para vos.</p>
+  </div>
+  <div class="category-grid">
+    <article class="soft-card"><span>✨</span>Conjuntos</article>
+    <article class="soft-card"><span>🩷</span>Bodys</article>
+    <article class="soft-card"><span>☁️</span>Básicos</article>
+    <article class="soft-card"><span>🎀</span>Ofertas</article>
+  </div>
+</section>
+
+<section class="section section-soft" id="productos">
+  <div class="container">
+    <div class="section-head">
+      <h2>Productos destacados</h2>
+      <p>Una selección realista para inspirar tu próxima compra.</p>
     </div>
-  {% else %}
-    <p class="text-muted">Muy pronto vas a ver nuevos productos publicados.</p>
-  {% endfor %}
-</div>
+
+    <div class="product-grid">
+      {% if products %}
+        {% for p in products %}
+        <article class="product-card">
+          {% if p.image_url %}
+          <img src="{{ p.image_url }}" alt="{{ p.name }}">
+          {% else %}
+          <div class="img-placeholder">Delanna Lencería</div>
+          {% endif %}
+          <div class="product-info">
+            <h3>{{ p.name }}</h3>
+            <p class="price">$ {{ '%.2f'|format(p.price) }}</p>
+            <div class="product-actions">
+              <form method="post" action="{{ url_for('shop.add_to_cart', product_id=p.id) }}">
+                <button type="submit" class="btn btn-primary">Agregar al carrito</button>
+              </form>
+              <a
+                class="btn btn-secondary"
+                target="_blank"
+                rel="noopener noreferrer"
+                href="https://wa.me/5493518158539?text=Hola%20%F0%9F%91%8B%20Quiero%20consultar%20por%20{{ p.name|urlencode }}%20de%20Delanna%20Lencer%C3%ADa"
+              >
+                Comprar por WhatsApp
+              </a>
+            </div>
+          </div>
+        </article>
+        {% endfor %}
+      {% else %}
+        {% set mock_products = [
+          {'name': 'Conjunto Aurora', 'price': 18990},
+          {'name': 'Body Venus', 'price': 22490},
+          {'name': 'Básico Nude Soft', 'price': 13990},
+          {'name': 'Pack Oferta Satin', 'price': 26990}
+        ] %}
+        {% for p in mock_products %}
+        <article class="product-card">
+          <div class="img-placeholder">Imagen del producto</div>
+          <div class="product-info">
+            <h3>{{ p.name }}</h3>
+            <p class="price">$ {{ p.price }}</p>
+            <div class="product-actions">
+              <button type="button" class="btn btn-primary">Agregar al carrito</button>
+              <a
+                class="btn btn-secondary"
+                target="_blank"
+                rel="noopener noreferrer"
+                href="https://wa.me/5493518158539?text=Hola%20%F0%9F%91%8B%20Quiero%20consultar%20por%20{{ p.name|urlencode }}%20de%20Delanna%20Lencer%C3%ADa"
+              >
+                Comprar por WhatsApp
+              </a>
+            </div>
+          </div>
+        </article>
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<section class="section container">
+  <div class="section-head">
+    <h2>Confianza Delanna</h2>
+  </div>
+  <div class="benefit-grid">
+    <article class="soft-card">🚚 Envíos a todo el país</article>
+    <article class="soft-card">🔒 Pagos seguros</article>
+    <article class="soft-card">💖 Atención personalizada</article>
+  </div>
+</section>
+
+<section class="section section-soft">
+  <div class="container">
+    <div class="section-head">
+      <h2>Medios de pago</h2>
+      <p>Opciones simples y seguras para comprar como prefieras.</p>
+    </div>
+    <div class="payment-grid">
+      <span class="soft-card">💳 Tarjetas</span>
+      <span class="soft-card">🛒 Mercado Pago</span>
+      <span class="soft-card">🏦 Transferencia</span>
+      <span class="soft-card">💵 Efectivo</span>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div>
+      <h3>Delanna Lencería</h3>
+      <p>Elegancia íntima para mujeres reales.</p>
+    </div>
+    <div>
+      <h4>Contacto</h4>
+      <p>WhatsApp: +54 9 351 815-8539</p>
+      <p>Instagram: @delanna.lenceria</p>
+    </div>
+    <div>
+      <h4>Pagos</h4>
+      <p>Tarjetas · Mercado Pago · Transferencia · Efectivo</p>
+    </div>
+  </div>
+  <p class="copyright">© {{ 2026 }} Delanna Lencería. Todos los derechos reservados.</p>
+</footer>
 {% endblock %}
