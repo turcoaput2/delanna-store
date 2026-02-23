@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %}Pedido confirmado · Delanna Store{% endblock %}
+{% block content %}
+<div class="card border-0 shadow-sm p-4 text-center">
+  <h2 class="mb-3">¡Pedido confirmado!</h2>
+  <p class="mb-2">Tu pedido <strong>#{{ order.id }}</strong> fue generado correctamente.</p>
+  <p class="mb-3">Estado actual: <span class="badge text-bg-warning">{{ order.status }}</span></p>
+  <h4>Total: $ {{ '%.2f'|format(order.total) }}</h4>
+  <a href="{{ url_for('orders.my_orders') }}" class="btn btn-dark mt-3">Ver mis pedidos</a>
+</div>
+{% endblock %}
