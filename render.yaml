@@ -2,6 +2,7 @@ services:
   - type: web
     name: delanna-store
     runtime: python
+    pythonVersion: "3.11.9"
     buildCommand: pip install -r requirements.txt
     startCommand: gunicorn wsgi:app --bind 0.0.0.0:$PORT
     envVars:
@@ -12,4 +13,4 @@ services:
       - key: BASE_URL
         sync: false
       - key: PYTHON_VERSION
-        value: 3.11.9
+        value: "3.11.9"
