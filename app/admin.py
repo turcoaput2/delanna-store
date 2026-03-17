@@ -1,11 +1,31 @@
-from flask import Blueprint, abort, flash, redirect, render_template, request, session, url_for
+import os
+import uuid
+
+from flask import Blueprint, abort, current_app, flash, redirect, render_template, request, session, url_for
 from werkzeug.security import check_password_hash
+from werkzeug.utils import secure_filename
 
 from . import db
 from .extensions import admin_required
 from .models import Order, Product, User
 
 admin_bp = Blueprint("admin", __name__)
+
+
+def _save_image(file):
+    """Save uploaded image and return the static URL path."""
+    from . import allowed_file
+
+    if not file or file.filename == "":
+        return None
+    if not allowed_file(file.filename):
+        return None
+
+    ext = file.filename.rsplit(".", 1)[1].lower()
+    filename = f"{uuid.uuid4().hex}.{ext}"
+    filepath = os.path.join(current_app.config["UPLOAD_FOLDER"], filename)
+    file.save(filepath)
+    return url_for("static", filename=f"uploads/{filename}")
 
 
 @admin_bp.route("/login", methods=["GET", "POST"])
@@ -44,7 +64,6 @@ def dashboard():
 def create_product():
     name = request.form.get("name", "").strip()
     description = request.form.get("description", "").strip()
-    image_url = request.form.get("image_url", "").strip()
     price_raw = request.form.get("price", "0")
     stock_raw = request.form.get("stock", "0")
 
@@ -59,11 +78,15 @@ def create_product():
         flash("Completá correctamente nombre, precio y stock.", "danger")
         return redirect(url_for("admin.dashboard"))
 
+    image_url = None
+    if "image" in request.files:
+        image_url = _save_image(request.files["image"])
+
     db.session.add(
         Product(
             name=name,
             description=description or None,
-            image_url=image_url or None,
+            image_url=image_url,
             price=price,
             stock=stock,
         )
@@ -77,6 +100,11 @@ def create_product():
 @admin_required
 def delete_product(product_id):
     product = Product.query.get_or_404(product_id)
+    if product.image_url and "/uploads/" in product.image_url:
+        filename = product.image_url.rsplit("/", 1)[-1]
+        filepath = os.path.join(current_app.config["UPLOAD_FOLDER"], filename)
+        if os.path.exists(filepath):
+            os.remove(filepath)
     db.session.delete(product)
     db.session.commit()
     flash("Producto eliminado.", "info")

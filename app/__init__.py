@@ -1,10 +1,19 @@
 import os
 
+from dotenv import load_dotenv
 from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 
+load_dotenv()
+
 
 db = SQLAlchemy()
+
+ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "webp", "gif"}
+
+
+def allowed_file(filename):
+    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 def create_app():
@@ -15,6 +24,13 @@ def create_app():
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "dev-secret-key-change-in-prod")
     app.config["ADMIN_URL_PREFIX"] = os.environ.get("ADMIN_URL_PREFIX", "/atelier-privado-delanna")
+    app.config["MAX_CONTENT_LENGTH"] = 5 * 1024 * 1024  # 5 MB
+    app.config["MP_ACCESS_TOKEN"] = os.environ.get("MP_ACCESS_TOKEN", "")
+    app.config["BASE_URL"] = os.environ.get("BASE_URL", "")
+
+    upload_path = os.path.join(app.static_folder, "uploads")
+    os.makedirs(upload_path, exist_ok=True)
+    app.config["UPLOAD_FOLDER"] = upload_path
 
     db.init_app(app)
 
@@ -22,6 +38,7 @@ def create_app():
     from .admin import admin_bp
     from .auth import auth_bp
     from .orders import orders_bp
+    from .payments import payments_bp
     from .shop import shop_bp
     from .extensions import load_logged_in_user
 
@@ -31,6 +48,7 @@ def create_app():
     app.register_blueprint(shop_bp)
     app.register_blueprint(admin_bp, url_prefix=app.config["ADMIN_URL_PREFIX"])
     app.register_blueprint(orders_bp)
+    app.register_blueprint(payments_bp)
 
     @app.errorhandler(403)
     def forbidden(_):

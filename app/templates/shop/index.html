@@ -1,30 +1,82 @@
-{% extends 'base.html' %}
-{% block title %}Delanna Lingerie · Inicio{% endblock %}
+{% extends "base.html" %}
+{% block title %}Delanna Lencería{% endblock %}
+
 {% block content %}
-<section class="hero p-4 p-md-5 rounded-4 mb-4 text-white shadow-sm">
-  <span class="badge rounded-pill bg-light text-dark mb-3">Colección femenina 2026</span>
-  <h1 class="display-6 fw-bold mb-3">Lencería femenina elegante, delicada y cómoda</h1>
-  <p class="mb-0 col-lg-8">Descubrí conjuntos, bodys y básicos premium para sentirte segura todos los días. Elegí tus favoritos y confirmá tu pedido en segundos.</p>
+<section class="hero-shell">
+  <article class="hero-card">
+    <div class="container">
+      <h1>Lencería que<br>te acompaña</h1>
+      <p>
+        Diseños cómodos, femeninos y con calce perfecto
+        para acompañarte todos los días.
+      </p>
+      <div class="hero-actions">
+        <a href="#productos" class="btn btn-primary btn-lg">Ver productos</a>
+      </div>
+    </div>
+  </article>
 </section>
 
-<div class="row g-4">
-  {% for product in products %}
-    <div class="col-12 col-md-6 col-xl-4">
-      <article class="card h-100 product-card border-0 shadow-sm">
-        <img class="card-img-top" src="{{ product.image_url or 'https://images.unsplash.com/photo-1613553497126-a44624272024?auto=format&fit=crop&w=900&q=80' }}" alt="{{ product.name }}">
-        <div class="card-body d-flex flex-column p-4">
-          <h5 class="card-title mb-1">{{ product.name }}</h5>
-          <p class="text-muted small mb-2">{{ product.description or 'Diseño exclusivo de Delanna Lingerie.' }}</p>
-          <p class="price fw-bold mb-3">$ {{ '%.2f'|format(product.price) }}</p>
-          <form method="post" action="{{ url_for('shop.add_to_cart', product_id=product.id) }}" class="mt-auto d-flex gap-2">
-            <input type="number" class="form-control rounded-pill" name="quantity" min="1" value="1" style="max-width: 90px;">
-            <button class="btn btn-dark rounded-pill w-100" type="submit">Agregar al carrito</button>
-          </form>
+<section class="section" id="productos">
+  <div class="container">
+    <div class="section-head">
+      <h2>Productos</h2>
+    </div>
+
+    {% if products %}
+    <div class="product-grid">
+      {% for p in products %}
+      <article class="product-card">
+        {% if p.image_url %}
+        <img src="{{ p.image_url }}" alt="{{ p.name }}">
+        {% else %}
+        <div class="img-placeholder">Sin imagen</div>
+        {% endif %}
+        <div class="product-info">
+          <h3>{{ p.name }}</h3>
+          <p class="price">$ {{ '%.2f'|format(p.price) }}</p>
+          <div class="product-actions">
+            <form method="post" action="{{ url_for('shop.add_to_cart', product_id=p.id) }}">
+              <button type="submit" class="btn btn-primary">Agregar al carrito</button>
+            </form>
+            <a
+              class="btn btn-secondary"
+              target="_blank"
+              rel="noopener noreferrer"
+              href="https://wa.me/5493518158539?text=Hola%20%F0%9F%91%8B%20Quiero%20consultar%20por%20{{ p.name|urlencode }}"
+            >
+              Consultar
+            </a>
+          </div>
         </div>
       </article>
+      {% endfor %}
     </div>
-  {% else %}
-    <p class="text-muted">Muy pronto vas a ver nuevos productos publicados.</p>
-  {% endfor %}
-</div>
+    {% else %}
+    <div class="empty-state">
+      <h3>Próximamente</h3>
+      <p>Estamos preparando nuevos productos. ¡Volvé pronto!</p>
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div>
+      <h3>Delanna Lencería</h3>
+      <p>Diseños femeninos con calce y comodidad.</p>
+    </div>
+    <div>
+      <h4>Contacto</h4>
+      <p>WhatsApp: +54 9 351 815-8539</p>
+      <p>Instagram: @delanna.lenceria</p>
+    </div>
+    <div>
+      <h4>Pagos</h4>
+      <p>Tarjetas · Mercado Pago · Transferencia · Efectivo</p>
+    </div>
+  </div>
+  <p class="copyright">© 2026 Delanna Lencería. Todos los derechos reservados.</p>
+</footer>
 {% endblock %}

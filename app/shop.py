@@ -73,6 +73,7 @@ def remove_cart_item(item_id):
 @shop_bp.post("/checkout")
 @login_required
 def checkout():
+    """Checkout via bank transfer — creates order with 'pendiente' status."""
     cart_items = CartItem.query.filter_by(user_id=g.user.id).all()
     if not cart_items:
         flash("No podés confirmar un pedido con el carrito vacío.", "danger")
@@ -95,5 +96,5 @@ def checkout():
         db.session.delete(item)
 
     db.session.commit()
-    flash(f"Pedido #{order.id} confirmado con éxito.", "success")
+    flash(f"Pedido #{order.id} generado. Realizá la transferencia para confirmarlo.", "info")
     return redirect(url_for("orders.order_confirmation", order_id=order.id))

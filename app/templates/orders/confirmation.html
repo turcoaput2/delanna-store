@@ -1,11 +1,33 @@
 {% extends 'base.html' %}
-{% block title %}Pedido confirmado · Delanna Store{% endblock %}
+{% block title %}Pedido confirmado · Delanna Lencería{% endblock %}
 {% block content %}
-<div class="card border-0 shadow-sm p-4 text-center">
-  <h2 class="mb-3">¡Pedido confirmado!</h2>
-  <p class="mb-2">Tu pedido <strong>#{{ order.id }}</strong> fue generado correctamente.</p>
-  <p class="mb-3">Estado actual: <span class="badge text-bg-warning">{{ order.status }}</span></p>
-  <h4>Total: $ {{ '%.2f'|format(order.total) }}</h4>
-  <a href="{{ url_for('orders.my_orders') }}" class="btn btn-dark mt-3">Ver mis pedidos</a>
+<div class="confirm-card">
+  {% if order.status == 'pagado' %}
+  <h2>¡Pago recibido!</h2>
+  <p>Tu pedido <strong>#{{ order.id }}</strong> fue pagado correctamente.</p>
+  <span class="badge badge-success">Pagado</span>
+  {% else %}
+  <h2>Pedido generado</h2>
+  <p>Tu pedido <strong>#{{ order.id }}</strong> fue creado correctamente.</p>
+  <span class="badge badge-warning">Pendiente de pago</span>
+
+  <div class="transfer-info">
+    <h4>Datos para transferencia</h4>
+    <p><strong>Alias:</strong> delanna.lenceria</p>
+    <p><strong>CBU:</strong> 0000003100000000000000</p>
+    <p><strong>Titular:</strong> Delanna Lencería</p>
+    <p class="text-muted small">Enviá el comprobante por WhatsApp para confirmar tu pedido.</p>
+  </div>
+  {% endif %}
+
+  <h3>Total: $ {{ '%.2f'|format(order.total) }}</h3>
+
+  <div class="confirm-actions">
+    <a href="{{ url_for('orders.my_orders') }}" class="btn btn-primary mt-3">Ver mis pedidos</a>
+    <a
+      href="https://wa.me/5493518158539?text=Hola!%20Hice%20el%20pedido%20%23{{ order.id }}%20por%20${{ '%.2f'|format(order.total) }}"
+      class="btn btn-outline mt-3" target="_blank" rel="noopener"
+    >💬 Enviar comprobante</a>
+  </div>
 </div>
 {% endblock %}

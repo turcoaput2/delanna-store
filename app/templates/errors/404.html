@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
+{% block title %}404 · No encontrado{% endblock %}
 {% block content %}
-<div class="text-center py-5">
+<div class="error-page">
   <h1>404</h1>
-  <p>La página solicitada no existe.</p>
-  <a href="{{ url_for('shop.index') }}" class="btn btn-dark">Volver al inicio</a>
+  <p>La página que buscás no existe.</p>
+  <a href="{{ url_for('shop.index') }}" class="btn btn-primary">Volver al inicio</a>
 </div>
 {% endblock %}
