@@ -46,6 +46,9 @@ def login():
             session["user_id"] = user.id
             flash("¡Bienvenida/o de nuevo!", "success")
             next_url = request.args.get("next")
+            # Only allow relative URLs to prevent open redirect
+            if next_url and not next_url.startswith("/"):
+                next_url = None
             return redirect(next_url or url_for("shop.index"))
 
     return render_template("auth/login.html")

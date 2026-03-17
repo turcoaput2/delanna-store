@@ -13,7 +13,12 @@
       <tbody>
       {% for item in cart_items %}
         <tr>
-          <td><strong>{{ item.product.name }}</strong></td>
+          <td>
+            {% if item.product.image_url %}
+            <img src="{{ item.product.image_url }}" alt="" style="width:48px;height:48px;object-fit:cover;border-radius:6px;">
+            {% endif %}
+            <strong>{{ item.product.name }}</strong>
+          </td>
           <td>$ {{ '%.2f'|format(item.product.price) }}</td>
           <td>
             <form method="post" action="{{ url_for('shop.update_cart_item', item_id=item.id) }}" class="d-flex gap-2">

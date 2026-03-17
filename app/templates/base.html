@@ -24,6 +24,7 @@
         <span class="user-email">{{ g.user.email }}</span>
         <a class="btn btn-outline btn-sm" href="{{ url_for('auth.logout') }}">Salir</a>
         {% else %}
+        <a class="btn btn-outline btn-sm" href="{{ url_for('auth.register') }}">Registrarse</a>
         <a class="btn btn-primary btn-sm" href="{{ url_for('auth.login') }}">Ingresar</a>
         {% endif %}
       </div>

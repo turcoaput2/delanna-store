@@ -14,7 +14,9 @@ def login_required(view):
     @wraps(view)
     def wrapped_view(*args, **kwargs):
         if g.user is None:
-            return redirect(url_for("auth.login", next=request.path))
+            # For POST routes (add-to-cart, checkout) redirect back to index
+            next_url = request.path if request.method == "GET" else url_for("shop.index")
+            return redirect(url_for("auth.login", next=next_url))
         return view(*args, **kwargs)
 
     return wrapped_view

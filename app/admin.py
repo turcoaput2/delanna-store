@@ -96,6 +96,47 @@ def create_product():
     return redirect(url_for("admin.dashboard"))
 
 
+@admin_bp.route("/products/<int:product_id>/edit", methods=["GET", "POST"])
+@admin_required
+def edit_product(product_id):
+    product = Product.query.get_or_404(product_id)
+
+    if request.method == "POST":
+        name = request.form.get("name", "").strip()
+        description = request.form.get("description", "").strip()
+        try:
+            price = float(request.form.get("price", "0"))
+            stock = int(request.form.get("stock", "0"))
+        except ValueError:
+            flash("Precio y stock deben ser numéricos.", "danger")
+            return redirect(url_for("admin.edit_product", product_id=product_id))
+
+        if not name or price < 0 or stock < 0:
+            flash("Completá correctamente los campos.", "danger")
+            return redirect(url_for("admin.edit_product", product_id=product_id))
+
+        product.name = name
+        product.description = description or None
+        product.price = price
+        product.stock = stock
+
+        if "image" in request.files and request.files["image"].filename:
+            new_url = _save_image(request.files["image"])
+            if new_url:
+                if product.image_url and "/uploads/" in product.image_url:
+                    old_filename = product.image_url.rsplit("/", 1)[-1]
+                    old_path = os.path.join(current_app.config["UPLOAD_FOLDER"], old_filename)
+                    if os.path.exists(old_path):
+                        os.remove(old_path)
+                product.image_url = new_url
+
+        db.session.commit()
+        flash("Producto actualizado.", "success")
+        return redirect(url_for("admin.dashboard"))
+
+    return render_template("admin/edit_product.html", product=product)
+
+
 @admin_bp.post("/products/<int:product_id>/delete")
 @admin_required
 def delete_product(product_id):

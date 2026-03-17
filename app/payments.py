@@ -37,6 +37,12 @@ def create_preference():
     db.session.add(order)
     db.session.flush()
 
+    # Check stock before creating order
+    for item in cart_items:
+        if item.quantity > item.product.stock:
+            flash(f"{item.product.name} solo tiene {item.product.stock} en stock.", "danger")
+            return redirect(url_for("shop.cart"))
+
     items_mp = []
     for item in cart_items:
         db.session.add(
@@ -47,6 +53,7 @@ def create_preference():
                 price=item.product.price,
             )
         )
+        item.product.stock -= item.quantity
         items_mp.append({
             "title": item.product.name,
             "quantity": item.quantity,

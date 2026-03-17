@@ -32,10 +32,21 @@ def add_to_cart(product_id):
     product = Product.query.get_or_404(product_id)
     quantity = max(1, int(request.form.get("quantity", 1)))
 
+    if product.stock <= 0:
+        flash(f"{product.name} no tiene stock disponible.", "danger")
+        return redirect(url_for("shop.index"))
+
     existing = CartItem.query.filter_by(user_id=g.user.id, product_id=product.id).first()
     if existing:
-        existing.quantity += quantity
+        new_qty = existing.quantity + quantity
+        if new_qty > product.stock:
+            flash(f"Solo hay {product.stock} unidades disponibles de {product.name}.", "danger")
+            return redirect(url_for("shop.index"))
+        existing.quantity = new_qty
     else:
+        if quantity > product.stock:
+            flash(f"Solo hay {product.stock} unidades disponibles de {product.name}.", "danger")
+            return redirect(url_for("shop.index"))
         existing = CartItem(user_id=g.user.id, product_id=product.id, quantity=quantity)
         db.session.add(existing)
 
@@ -79,6 +90,12 @@ def checkout():
         flash("No podés confirmar un pedido con el carrito vacío.", "danger")
         return redirect(url_for("shop.cart"))
 
+    # Check stock before creating order
+    for item in cart_items:
+        if item.quantity > item.product.stock:
+            flash(f"{item.product.name} solo tiene {item.product.stock} en stock.", "danger")
+            return redirect(url_for("shop.cart"))
+
     total = sum(item.quantity * item.product.price for item in cart_items)
     order = Order(user_id=g.user.id, total=total, status="pendiente")
     db.session.add(order)
@@ -93,6 +110,7 @@ def checkout():
                 price=item.product.price,
             )
         )
+        item.product.stock -= item.quantity
         db.session.delete(item)
 
     db.session.commit()

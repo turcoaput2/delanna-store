@@ -203,6 +203,20 @@ h1, h2, h3, h4, h5, h6 {
 .product-actions { display: flex; gap: 8px; flex-wrap: wrap; }
 .product-actions form { flex: 1; min-width: 0; }
 .product-actions .btn { width: 100%; font-size: .76rem; }
+.product-actions a.btn { flex: 1; min-width: 0; }
+
+/* Stock info */
+.stock-low {
+  color: #92400e; font-size: .78rem; font-weight: 600;
+  margin: 0 0 10px;
+}
+.stock-out {
+  color: var(--danger); font-size: .78rem; font-weight: 600;
+  margin: 0 0 10px;
+}
+.btn:disabled, .btn[disabled] {
+  opacity: .45; cursor: not-allowed; pointer-events: none;
+}
 
 /* ── Cards genéricas ─────────────────────────────────────────────── */
 .card {

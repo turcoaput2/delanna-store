@@ -82,9 +82,12 @@
               <td>$ {{ '%.2f'|format(product.price) }}</td>
               <td>{{ product.stock }}</td>
               <td>
-                <form method="post" action="{{ url_for('admin.delete_product', product_id=product.id) }}">
-                  <button class="btn btn-sm btn-outline-danger">Eliminar</button>
-                </form>
+                <div class="d-flex gap-2">
+                  <a href="{{ url_for('admin.edit_product', product_id=product.id) }}" class="btn btn-sm btn-outline-primary">Editar</a>
+                  <form method="post" action="{{ url_for('admin.delete_product', product_id=product.id) }}">
+                    <button class="btn btn-sm btn-outline-danger">Eliminar</button>
+                  </form>
+                </div>
               </td>
             </tr>
           {% endfor %}
