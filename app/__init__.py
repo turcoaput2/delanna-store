@@ -67,3 +67,7 @@ def create_app():
         db.create_all()
 
     return app
+
+
+# Render auto-detects "app:app" — export the WSGI application here
+app = create_app()
