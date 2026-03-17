@@ -86,3 +86,7 @@ def _seed_admin(app):
         ))
         db.session.commit()
         app.logger.info("Admin user created: %s", email)
+
+
+# Render runs "gunicorn app:app" — this makes it work
+app = create_app()
