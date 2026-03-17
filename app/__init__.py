@@ -78,7 +78,12 @@ def _seed_admin(app):
     email = os.environ.get("ADMIN_EMAIL", "aputbenjamin@gmail.com")
     password = os.environ.get("ADMIN_PASSWORD", "123456")
 
-    if not User.query.filter_by(email=email).first():
+    user = User.query.filter_by(email=email).first()
+    if user:
+        user.password_hash = generate_password_hash(password)
+        user.is_admin = True
+        db.session.commit()
+    else:
         db.session.add(User(
             email=email,
             password_hash=generate_password_hash(password),
