@@ -65,5 +65,24 @@ def create_app():
 
     with app.app_context():
         db.create_all()
+        _seed_admin(app)
 
     return app
+
+
+def _seed_admin(app):
+    """Create the admin user if it doesn't exist yet."""
+    from werkzeug.security import generate_password_hash
+    from .models import User
+
+    email = os.environ.get("ADMIN_EMAIL", "aputbenjamin@gmail.com")
+    password = os.environ.get("ADMIN_PASSWORD", "123456")
+
+    if not User.query.filter_by(email=email).first():
+        db.session.add(User(
+            email=email,
+            password_hash=generate_password_hash(password),
+            is_admin=True,
+        ))
+        db.session.commit()
+        app.logger.info("Admin user created: %s", email)
