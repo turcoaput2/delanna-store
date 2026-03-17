@@ -35,8 +35,12 @@ def admin_login():
         password = request.form.get("password", "")
         user = User.query.filter_by(email=email).first()
 
-        if user is None or not user.is_admin or not check_password_hash(user.password_hash, password):
-            flash("Acceso admin inválido.", "danger")
+        if user is None:
+            flash("No se encontró el usuario.", "danger")
+        elif not user.is_admin:
+            flash("Este usuario no es administrador.", "danger")
+        elif not check_password_hash(user.password_hash, password):
+            flash("Contraseña incorrecta.", "danger")
         else:
             session.clear()
             session["user_id"] = user.id

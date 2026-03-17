@@ -83,6 +83,7 @@ def _seed_admin(app):
         user.password_hash = generate_password_hash(password)
         user.is_admin = True
         db.session.commit()
+        app.logger.info("Admin password reset for: %s", email)
     else:
         db.session.add(User(
             email=email,
