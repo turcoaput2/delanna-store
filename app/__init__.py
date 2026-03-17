@@ -79,15 +79,16 @@ def _seed_admin(app):
     password = os.environ.get("ADMIN_PASSWORD", "123456")
 
     user = User.query.filter_by(email=email).first()
+    pw_hash = generate_password_hash(password, method="pbkdf2:sha256")
     if user:
-        user.password_hash = generate_password_hash(password)
+        user.password_hash = pw_hash
         user.is_admin = True
         db.session.commit()
         app.logger.info("Admin password reset for: %s", email)
     else:
         db.session.add(User(
             email=email,
-            password_hash=generate_password_hash(password),
+            password_hash=pw_hash,
             is_admin=True,
         ))
         db.session.commit()

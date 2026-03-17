@@ -23,7 +23,7 @@ def register():
         elif User.query.filter_by(email=email).first():
             flash("Este email ya está registrado.", "danger")
         else:
-            user = User(email=email, password_hash=generate_password_hash(password))
+            user = User(email=email, password_hash=generate_password_hash(password, method="pbkdf2:sha256"))
             db.session.add(user)
             db.session.commit()
             flash("Cuenta creada. Ahora podés iniciar sesión.", "success")
